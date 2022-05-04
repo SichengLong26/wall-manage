@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}后台管理{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
+    <script src="../static/js/jquery-3.6.0.js"></script>
+</head>
+<body>
+<main class="container">
+    <header>
+        <h1 class="text-center display-4">
+            <a href="{{ url_for('index') }}" class="text-success"><strong>The Wall</strong></a>
+        </h1>
+    </header>
+
+    <form method="post" action="{{url_for('search_results')}}">
+        <input type="text" name="content" id="content" placeholder="请输入用户名">
+        <input type="submit" value="搜索">
+    </form>
+    <div>
+        <p>共搜索到{{ results|length }}条信息</p>
+        {% for result in results %}
+                <a class="list-group-item list-group-item-action flex-column">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1 text-success">{{ result.username }}
+                            <small class="text-muted"> #{{ loop.revindex }}</small>
+                        </h5>
+                        <small data-toggle="tooltip" data-placement="top"
+                               data-timestamp="{{ result.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') }}"
+                               data-delay="500">
+                            {{ moment(result.timestamp).fromNow(refresh=True) }}
+                        </small>
+                    </div>
+                    <div>
+                        <p class="mb-1">{{ result.content }}</p>
+                        <a class='btn' href="{{ url_for('delete_message', message_id=result.mid) }}">Delete</a>
+                    </div>
+                </a>
+        {% endfor %}
+    </div>
+    
+</main>
+<!-- <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.2.1.slim.min.js') }}"></script> -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/script.js') }}"></script>
+{{ moment.include_moment(local_js=url_for('static', filename='js/moment-with-locales.min.js')) }}
+</body>
+</html>

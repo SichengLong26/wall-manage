@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="display: flex;justify-content: space-between;">
+    <h3><strong>后台管理系统</strong></h3>
+    <a href="{{ url_for('search') }}">搜索用户信息</a>
+</div>
+<h5>
+    {{ messages|length }} messages
+    <small class="float-right">
+        <a href="#bottom" title="Go Bottom">&darr;</a>
+    </small>
+</h5>
+<div>
+    {% for message in messages %}
+            <a class="list-group-item list-group-item-action flex-column">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1 text-success">{{ message.username }}
+                        <small class="text-muted"> #{{ loop.revindex }}</small>
+                    </h5>
+                    <small data-toggle="tooltip" data-placement="top"
+                           data-timestamp="{{ message.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') }}"
+                           data-delay="500">
+                        {{ moment(message.timestamp).fromNow(refresh=True) }}
+                    </small>
+                </div>
+                <div>
+                    <p class="mb-1">{{ message.content }}</p>
+                    <a class='btn' href="{{ url_for('delete_message', message_id=message.mid) }}">Delete</a>
+                </div>
+            </a>
+    {% endfor %}
+</div>
+{% endblock %}
